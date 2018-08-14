@@ -1,5 +1,7 @@
 # maven仓库发布和引用
 
+[github 搭建 maven](https://github.com/1109993488/MavenRepository)
+
 ## nexus下载和安装
 
 ### 下载地址：
