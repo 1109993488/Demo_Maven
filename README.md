@@ -18,9 +18,9 @@ wget https://download.sonatype.com/nexus/3/latest-unix.tar.gz
 wget https://download.sonatype.com/nexus/3/latest-mac.tgz
 
 # 解压
-tar -xf last-unix.tar.gz -C /usr/local/
-# 然后我们进入到 nexus-3.11.0-01/ 目录下
-cd /usr/local/nexus-3.11.0-01/
+tar -xf last-unix.tar.gz -C /usr/local/nexus
+# 然后我们进入到 /usr/local/nexus/nexus-3.11.0-01/bin 目录下
+cd /usr/local/nexus/nexus-3.11.0-01/bin
 ```
 
 ### 用户界面
@@ -46,6 +46,10 @@ cd /usr/local/nexus-3.11.0-01/
 - hosted：你可以上传你自己的项目到这里面
 - group：它可以包含前面两个，是一个聚合体。一般用来给客户一个访问nexus的统一地址。
 
+### 创建 repository
+
+点击 Create repository, 选择 maven2, 输入仓库名 my-test-hosted 创建
+
 ## 配置上传
 
 ### 新建 library 模块并修改 build.gradle
@@ -63,13 +67,14 @@ apply plugin: 'maven'
 ext {
     // maven仓库地址
     PUBLISH_URL = 'http://127.0.0.1:8081/repository/my-test-hosted/'
+    PUBLISH_SNAPSHOT_URL = 'http://127.0.0.1:8081/repository/my-test-hosted-SNAPSHOT/'
 
     // group
     PUBLISH_GROUP_ID = 'com.blingbling.library'
     // artifact
     PUBLISH_ARTIFACT_ID = 'util'
     // version
-    PUBLISH_VERSION = '1.0.0'
+    PUBLISH_VERSION = '1.0.0-SNAPSHOT'
 
     // user
     USER_NAME = 'admin'
@@ -80,6 +85,9 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: PUBLISH_URL) {
+                authentication(userName: USER_NAME, password: USER_PASSWORD)
+            }
+            snapshotRepository(url: PUBLISH_SNAPSHOT_URL) {
                 authentication(userName: USER_NAME, password: USER_PASSWORD)
             }
             pom.project {
@@ -95,8 +103,28 @@ uploadArchives {
 SNAPSHOT版本可以增加
 
 ```gradle
-snapshotRepository(url: PUBLISH_SNAPSHOT_URL) {
-  authentication(userName: USER_NAME, password: USER_PASSWORD)
+//版本号后面增加 -SNAPSHOT
+PUBLISH_VERSION = '1.0.0-SNAPSHOT'
+
+// maven仓库地址
+PUBLISH_SNAPSHOT_URL = 'http://127.0.0.1:8081/repository/my-test-hosted-SNAPSHOT/'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: PUBLISH_URL) {
+                authentication(userName: USER_NAME, password: USER_PASSWORD)
+            }
+            snapshotRepository(url: PUBLISH_SNAPSHOT_URL) {
+                authentication(userName: USER_NAME, password: USER_PASSWORD)
+            }
+            pom.project {
+                groupId PUBLISH_GROUP_ID
+                artifactId PUBLISH_ARTIFACT_ID
+                version PUBLISH_VERSION
+            }
+        }
+    }
 }
 ```
 
@@ -139,8 +167,20 @@ dependencies {
 ```gradle
 // 把maven地址改为本地文件夹
 PUBLISH_URL = 'file:///Users/wo/MEVEN_REPOSITORY'
-// 本地仓库不需要验证用户
-repository(url: PUBLISH_URL)
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            // 本地仓库不需要验证用户
+            repository(url: PUBLISH_URL)
+            pom.project {
+                groupId PUBLISH_GROUP_ID
+                artifactId PUBLISH_ARTIFACT_ID
+                version PUBLISH_VERSION
+            }
+        }
+    }
+}
 
 // 引用本地maven仓库地址
 maven { url 'file:///Users/wo/MEVEN_REPOSITORY' }
