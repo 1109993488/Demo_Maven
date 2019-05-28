@@ -29,36 +29,4 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
-
-apply plugin: 'maven'
-
-ext {
-    // maven仓库地址
-    PUBLISH_URL = rootProject.uri("MAVEN_REPOSITORY")
-
-    // group
-    PUBLISH_GROUP_ID = 'com.blingbling.library'
-    // artifact
-    PUBLISH_ARTIFACT_ID = 'util'
-    // version
-    PUBLISH_VERSION = '1.0.0'
-
-    // user
-    USER_NAME = 'admin'
-    USER_PASSWORD = 'admin123'
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: PUBLISH_URL) {
-                authentication(userName: USER_NAME, password: USER_PASSWORD)
-            }
-            pom.project {
-                groupId PUBLISH_GROUP_ID
-                artifactId PUBLISH_ARTIFACT_ID
-                version PUBLISH_VERSION
-            }
-        }
-    }
-}
+apply from: 'build-maven.gradle'

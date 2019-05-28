@@ -63,7 +63,12 @@ android {...}
 
 dependencies {...}
 
+apply from: 'build-maven.gradle'
+```
 
+### 新建 build-maven.gradle
+
+```gradle
 apply plugin: 'maven'
 
 ext {
@@ -162,7 +167,7 @@ dependencies {
 
 ```gradle
 // 把maven地址改为本地文件夹
-PUBLISH_URL = rootProject.uri("MEVEN_REPOSITORY")
+PUBLISH_URL = rootProject.uri("repo")
 
 uploadArchives {
     repositories {
@@ -179,7 +184,7 @@ uploadArchives {
 }
 
 // 引用本地maven仓库地址
-maven { url rootProject.uri("MEVEN_REPOSITORY") }
+maven { url rootProject.uri("repo") }
 ```
 
 ## github 搭建 maven 仓库
