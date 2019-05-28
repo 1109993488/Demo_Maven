@@ -69,14 +69,13 @@ apply plugin: 'maven'
 ext {
     // maven仓库地址
     PUBLISH_URL = 'http://127.0.0.1:8081/repository/my-test-hosted/'
-    PUBLISH_SNAPSHOT_URL = 'http://127.0.0.1:8081/repository/my-test-hosted-SNAPSHOT/'
 
     // group
     PUBLISH_GROUP_ID = 'com.blingbling.library'
     // artifact
     PUBLISH_ARTIFACT_ID = 'util'
     // version
-    PUBLISH_VERSION = '1.0.0-SNAPSHOT'
+    PUBLISH_VERSION = '1.0.0'
 
     // user
     USER_NAME = 'admin'
@@ -87,9 +86,6 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: PUBLISH_URL) {
-                authentication(userName: USER_NAME, password: USER_PASSWORD)
-            }
-            snapshotRepository(url: PUBLISH_SNAPSHOT_URL) {
                 authentication(userName: USER_NAME, password: USER_PASSWORD)
             }
             pom.project {
@@ -145,7 +141,6 @@ allprojects {
         // maven仓库地址
         maven { url 'http://127.0.0.1:8081/repository/my-test-hosted/' }
 
-        /*
         // 带认证的仓库库
         maven {
             url 'http://127.0.0.1:8081/repository/my-test-hosted'
@@ -154,7 +149,6 @@ allprojects {
                 password 'admin123'
             }
         }
-        */
     }
 }
 
@@ -168,7 +162,7 @@ dependencies {
 
 ```gradle
 // 把maven地址改为本地文件夹
-PUBLISH_URL = 'file:///Users/wo/MEVEN_REPOSITORY'
+PUBLISH_URL = rootProject.uri("MEVEN_REPOSITORY")
 
 uploadArchives {
     repositories {
@@ -185,5 +179,5 @@ uploadArchives {
 }
 
 // 引用本地maven仓库地址
-maven { url 'file:///Users/wo/MEVEN_REPOSITORY' }
+maven { url rootProject.uri("MEVEN_REPOSITORY") }
 ```

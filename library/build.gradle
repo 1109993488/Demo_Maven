@@ -34,7 +34,7 @@ apply plugin: 'maven'
 
 ext {
     // maven仓库地址
-    PUBLISH_URL = 'http://127.0.0.1:8081/repository/my-test-hosted/'
+    PUBLISH_URL = rootProject.uri("MAVEN_REPOSITORY")
 
     // group
     PUBLISH_GROUP_ID = 'com.blingbling.library'
