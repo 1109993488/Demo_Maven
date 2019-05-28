@@ -181,3 +181,32 @@ uploadArchives {
 // 引用本地maven仓库地址
 maven { url rootProject.uri("MEVEN_REPOSITORY") }
 ```
+
+## github 搭建 maven 仓库
+
+### 上传
+
+  1. 创建一个仓库项目
+  0. 把生成的maven本地仓库上传到远程仓库
+
+### 使用
+
+```gradle
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        
+        //github
+        maven { url "https://raw.github.com/${user_account}/${project_name}/${branch}" }
+        
+        //码云
+        maven { url "https://gitee.com/${user_account}/${project_name}/raw/${branch}" }
+    }
+}
+
+//引用
+dependencies {
+    implementation 'com.blingbling.library:util:1.0.0'
+}
+```
